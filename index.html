@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>D&D Moral Alignment Quiz</title>
+<style>
+body { font-family: Arial, sans-serif; background-color: #f7f5f0; padding: 20px; }
+h1 { text-align: center; }
+.question { margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0px 2px 5px rgba(0,0,0,0.1); }
+.options label { display: block; margin: 5px 0; }
+button { display: block; margin: 20px auto; padding: 10px 20px; font-size: 16px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; }
+.result { text-align: center; margin-top: 20px; font-size: 20px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>What's Your True D&D Moral Alignment?</h1>
+<form id="quizForm">
+</form>
+<button type="button" onclick="calculateResult()">Get My Alignment</button>
+<div class="result" id="result"></div>
+
+<script>
+const questions = [
+    ["You find a wallet stuffed with cash...", ["A. Turn it in to the police", "B. Try to find the owner", "C. Take the money but leave the wallet", "D. Keep it all"], "GE"],
+    ["Rules are...", ["A. There for a reason", "B. Spirit over letter", "C. Suggestions", "D. Barely guidelines"], "LC"],
+    ["Group project slacker...", ["A. Report them", "B. Talk privately", "C. Cover for them", "D. Let them fail"], "GE"],
+    ["Friend stole something...", ["A. Insist return", "B. Help them fix it", "C. Laugh it off", "D. Ask for one too"], "GE"],
+    ["Fantasy role...", ["A. Noble knight", "B. Wise healer", "C. Roguish trickster", "D. Cunning powerbroker"], "GE"],
+    ["Order you disagree with...", ["A. Follow exactly", "B. Adjust slightly", "C. Drag feet", "D. Ignore"], "LC"],
+    ["Cut in line...", ["A. Confront", "B. Politely correct", "C. Let it slide", "D. Cut ahead"], "LC"],
+    ["Villain admiration...", ["A. Magneto", "B. V", "C. Jack Sparrow", "D. Littlefinger"], "LC"],
+    ["Shady company job...", ["A. Turn it down", "B. Research first", "C. Take it", "D. Profit"], "GE"],
+    ["Zombie apocalypse first move...", ["A. Form group", "B. Save people", "C. Go off-grid", "D. Find safe spot"], "GE"],
+    ["When wronged...", ["A. Seek justice", "B. Make peace", "C. Get even quietly", "D. Make them regret"], "GE"],
+    ["Promises...", ["A. Break only if impossible", "B. Keep if right", "C. Keep if convenient", "D. Tools not shackles"], "LC"],
+    ["Dangerous secret...", ["A. Keep it", "B. Use if necessary", "C. Leak anonymously", "D. Use for leverage"], "GE"],
+    ["Workspace...", ["A. Perfectly organized", "B. Mostly organized", "C. Controlled chaos", "D. Disaster zone"], "LC"],
+    ["Extra change...", ["A. Return immediately", "B. Return if noticed", "C. Keep it", "D. Keep & tell no one"], "GE"],
+    ["Motto...", ["A. Honor above all", "B. Help others", "C. Freedom at any cost", "D. Ends justify means"], "GE"],
+    ["Risky plan...", ["A. Stick to safe", "B. Agree if manageable", "C. Take risk", "D. Take risk & claim credit"], "GE"],
+    ["Laws you disagree with...", ["A. Follow anyway", "B. Follow unless strong reason", "C. Ignore unless caught", "D. Break openly"], "LC"],
+    ["Power over others...", ["A. Protect them", "B. Help them grow", "C. Make things fun", "D. Make them work for you"], "GE"],
+    ["Insult in public...", ["A. Stay calm", "B. Witty comeback", "C. Embarrass them", "D. Plot revenge"], "GE"]
+];
+
+const scoring = { "A": 2, "B": 1, "C": 0, "D": -1 };
+
+function buildQuiz() {
+    const form = document.getElementById("quizForm");
+    questions.forEach((q, i) => {
+        const div = document.createElement("div");
+        div.className = "question";
+        div.innerHTML = `<p><b>Q${i+1}:</b> ${q[0]}</p>`;
+        const opts = document.createElement("div");
+        opts.className = "options";
+        q[1].forEach((opt, idx) => {
+            const letter = ["A", "B", "C", "D"][idx];
+            opts.innerHTML += `<label><input type="radio" name="q${i}" value="${letter}"> ${opt}</label>`;
+        });
+        div.appendChild(opts);
+        form.appendChild(div);
+    });
+}
+
+function calculateResult() {
+    let law = 0, good = 0;
+    questions.forEach((q, i) => {
+        const answer = document.querySelector(`input[name="q${i}"]:checked`);
+        if (answer) {
+            if (q[2] === "LC") { law += scoring[answer.value]; }
+            else if (q[2] === "GE") { good += scoring[answer.value]; }
+        }
+    });
+    let lawAxis = law > 4 ? "Lawful" : law < -4 ? "Chaotic" : "Neutral";
+    let goodAxis = good > 6 ? "Good" : good < -6 ? "Evil" : "Neutral";
+    document.getElementById("result").innerText = lawAxis + " " + goodAxis;
+}
+
+buildQuiz();
+</script>
+
+</body>
+</html>
